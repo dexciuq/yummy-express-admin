@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   TextInput,
@@ -53,11 +53,11 @@ export default function Authentification() {
   };
 
   return (
-    <Container size={420} my={40} className={classes.container}>
+    <Container className={classes.container}>
       <Paper
         withBorder
-        shadow="md"
         p={30}
+        shadow="md"
         radius="md"
         className={classes.paper}
       >

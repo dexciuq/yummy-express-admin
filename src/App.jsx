@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 import { createTheme, MantineProvider } from "@mantine/core";
 import React from "react";
-import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import AuthProvider, { useAuth } from "./contexts/AuthContext";
 import Authentification from "./pages/auth/Authentification";
 import Header from "./components/header/Header";

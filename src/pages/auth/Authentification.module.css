@@ -2,8 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 500px;
+  height: 100vh;
   font-family: "Manrope", sans-serif;
+}
+
+.paper {
+  min-width: 420px;
 }
 
 .title {
