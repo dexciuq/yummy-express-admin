@@ -1,0 +1,475 @@
+const BASE_URL = 'http://localhost:8080/v1';
+
+export const loginUser = async (credentials) => {
+    const response = await fetch(`${BASE_URL}/auth/authenticate`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+    });
+    if (!response.ok) {
+        console.log(response)
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const logoutUser = async () => {
+    const response = await fetch(`${BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const refreshAccessToken = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+        throw new Error('Refresh token is missing');
+    }
+
+    const response = await fetch(`${BASE_URL}/auth/refresh`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${refreshToken}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+
+    const data = await response.json();
+    localStorage.setItem('accessToken', data.accessToken);
+    return data.accessToken;
+};
+
+const fetchWithAccessToken = async (url, options = {}) => {
+    let accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+        throw new Error('Access token is missing');
+    }
+
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            ...options.headers,
+            'Authorization': `Bearer ${accessToken}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+
+    return response.json();
+};
+
+export const getProducts = async (params = {}) => {
+    const url = new URL(`${BASE_URL}/products`);
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    const response = await fetch(url.toString());
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getProduct = async (id) => {
+    const response = await fetch(`${BASE_URL}/products/${id}`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const addProduct = async (product) => {
+    product.price = product.price * 100;
+    const response = await fetchWithAccessToken(`${BASE_URL}/products`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(product),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const updateProduct = async (id, product) => {
+    product.price = product.price * 100;
+    const response = await fetchWithAccessToken(`${BASE_URL}/products/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(product),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const deleteProduct = async (id) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/products/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getCategories = async () => {
+    const response = await fetch(`${BASE_URL}/categories`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getCategory = async (id) => {
+    const response = await fetch(`${BASE_URL}/categories/${id}`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const addCategory = async (category) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/categories`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(category),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const updateCategory = async (id, category) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/categories/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(category),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const deleteCategory = async (id) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/categories/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getDiscounts = async () => {
+    const response = await fetch(`${BASE_URL}/discounts`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getDiscount = async (id) => {
+    const response = await fetch(`${BASE_URL}/discounts/${id}`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const addDiscount = async (discount) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/discounts`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(discount),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const updateDiscount = async (id, discount) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/discounts/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(discount),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const deleteDiscount = async (id) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/discounts/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getUnits = async () => {
+    const response = await fetch(`${BASE_URL}/units`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getUnit = async (id) => {
+    const response = await fetch(`${BASE_URL}/units/${id}`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const addUnit = async (unit) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/units`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(unit),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const updateUnit = async (id, unit) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/units/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(unit),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const deleteUnit = async (id) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/units/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getBrands = async () => {
+    const response = await fetch(`${BASE_URL}/brands`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getBrand = async (id) => {
+    const response = await fetch(`${BASE_URL}/brands/${id}`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const addBrand = async (brand) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/brands`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(brand),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const updateBrand = async (id, brand) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/brands/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(brand),
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const deleteBrand = async (id) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/brands/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getCountries = async () => {
+    const response = await fetch(`${BASE_URL}/countries`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getCountry = async (id) => {
+    const response = await fetch(`${BASE_URL}/countries/${id}`);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+const addCountry = async (country) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/countries`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(country),
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+
+    return response.json();
+};
+
+export const updateCountry = async (id, country) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/countries/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(country),
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+
+    return response.json();
+};
+
+export const deleteCountry = async (id) => {
+    const response = await fetchWithAccessToken(`${BASE_URL}/countries/${id}`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+
+    return response.json();
+};

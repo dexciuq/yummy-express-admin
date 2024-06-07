@@ -1,0 +1,48 @@
+.container {
+  margin-top: 20px;
+}
+
+.productImage {
+  border-radius: 8px;
+  object-fit: contain; /* Ensures the image is fully visible */
+}
+
+.categoryImage {
+  border-radius: 8px;
+  object-fit: contain; /* Ensures the image is fully visible */
+  height: 100%;
+  width: 50px;
+  max-width: 100%;
+}
+
+.title {
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.price {
+  color: #5fcc55;
+  font-weight: 700;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.badge {
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.description {
+  margin-bottom: 20px;
+  color: #7f8c8d;
+  text-align: left;
+}
+
+.group {
+  margin-bottom: 20px;
+}
+
+.button {
+  border: none;
+}
