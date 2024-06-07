@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { deleteProduct, getProducts } from "../../services/Api.js";
-import ProductCart from "../../components/product-card/ProductCard.jsx";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@mantine/core";
-import "../../components/product-card/ProductCard.jsx";
+import ProductCard from "../../components/product-card/ProductCard.jsx";
 
 export default function ProductList() {
   const navigate = useNavigate();
@@ -60,7 +59,7 @@ export default function ProductList() {
       </button>
       <ul style={{ display: "flex", flexWrap: "wrap" }}>
         {products.map((product) => (
-          <ProductCart
+          <ProductCard
             key={product.id}
             product={product}
             onGet={handleGet}

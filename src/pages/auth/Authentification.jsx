@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import React, { useContext, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import {
   TextInput,
   PasswordInput,
@@ -7,41 +7,106 @@ import {
   Paper,
   Container,
   Title,
+  Group,
+  Anchor,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { IconMail, IconLock } from "@tabler/icons-react";
+import classes from "./Authentification.module.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Authentification() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login } = useAuth();
 
-  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [message, setMessage] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await login(email, password);
+  const form = useForm({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      password: (value) =>
+        value.length >= 8 ? null : "Password must have at least 8 characters",
+    },
+  });
+
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
+  };
+
+  const handleSubmit = async (values) => {
+    try {
+      await login(values.email, values.password);
+      navigate("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Login error:", error.message);
+        setMessage(error.message);
+      } else {
+        console.error("Unknown error occurred during login");
+      }
+    }
   };
 
   return (
-    <Container size={420} my={40}>
-      <Title align="center">Welcome back!</Title>
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form onSubmit={handleSubmit}>
+    <Container size={420} my={40} className={classes.container}>
+      <Paper
+        withBorder
+        shadow="md"
+        p={30}
+        radius="md"
+        className={classes.paper}
+      >
+        <Title align="center" className={classes.title}>
+          Welcome back!
+        </Title>
+        <form mt="xl" onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput
-            label="Email"
+            label="Email Address"
             placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            icon={<IconMail size={16} />}
+            value={form.values.email}
+            onChange={(event) =>
+              form.setFieldValue("email", event.currentTarget.value)
+            }
+            error={form.errors.email && "Invalid email"}
             required
+            className={classes.input}
           />
           <PasswordInput
             label="Password"
             placeholder="Your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            icon={<IconLock size={16} />}
+            value={form.values.password}
+            onChange={(event) =>
+              form.setFieldValue("password", event.currentTarget.value)
+            }
+            error={
+              form.errors.password && "Password must have at least 8 characters"
+            }
             required
             mt="md"
+            className={classes.input}
           />
-          <Button type="submit" fullWidth mt="xl">
-            Login
+          <Group position="apart" mt="md">
+            <Anchor
+              component="button"
+              type="button"
+              color="dimmed"
+              size="xs"
+              onClick={handleForgotPassword}
+              className={classes.anchor}
+            >
+              Forgot password?
+            </Anchor>
+          </Group>
+          {message && <div className="error-notification">{message}</div>}
+          <Button type="submit" fullWidth mt="xl" className={classes.button}>
+            Sign in
           </Button>
         </form>
       </Paper>

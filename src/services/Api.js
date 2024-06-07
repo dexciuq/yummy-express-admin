@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080/v1';
+const BASE_URL = 'http://46.101.154.239:8080/v1';
 
 export const loginUser = async (credentials) => {
     const response = await fetch(`${BASE_URL}/auth/authenticate`, {
@@ -18,10 +18,15 @@ export const loginUser = async (credentials) => {
 };
 
 export const logoutUser = async () => {
+    let accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+        throw new Error('Access token is missing');
+    }
     const response = await fetch(`${BASE_URL}/auth/logout`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
         },
     });
     if (!response.ok) {
@@ -56,6 +61,26 @@ export const refreshAccessToken = async () => {
     localStorage.setItem('accessToken', data.accessToken);
     return data.accessToken;
 };
+
+export const getUserInfo = async () => {
+    let accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+        throw new Error('Access token is missing');
+    }
+    const response = await fetch(`${BASE_URL}/profile/me`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        },
+    });
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+  };
 
 const fetchWithAccessToken = async (url, options = {}) => {
     let accessToken = localStorage.getItem('accessToken');

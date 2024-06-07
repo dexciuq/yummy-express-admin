@@ -1,22 +1,7 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get("/v1/profile/me");
-        setUser(response.data.user);
-      } catch (error) {
-        console.error("Fetching profile failed", error);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
+  const { user } = useAuth();
   return (
     <div>
       {user ? (

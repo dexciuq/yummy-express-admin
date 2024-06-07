@@ -1,8 +1,8 @@
 .header {
-  padding-top: var(--mantine-spacing-sm);
   background-color: var(--mantine-color-gray-0, var(--mantine-color-dark-6));
   border-bottom: 1px solid var(--mantine-color-gray-2, transparent);
   margin-bottom: 120px;
+  min-width: 100vw;
 }
 
 .mainSection {
@@ -20,7 +20,6 @@
   }
 
   @media (max-width: 576px) {
-    /* Assuming 'xs' breakpoint is 576px */
     display: none;
   }
 }

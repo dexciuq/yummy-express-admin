@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import React, { useState, useContext, useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import cx from "clsx";
 import {
   Container,
@@ -11,54 +11,41 @@ import {
   Tabs,
   Burger,
   rem,
-  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
-  IconSettings,
-  IconPlayerPause,
-  IconTrash,
-  IconSwitchHorizontal,
-  IconChevronDown,
-} from "@tabler/icons-react";
-import { MantineLogo } from "@mantinex/mantine-logo";
+import { IconLogout, IconSettings, IconChevronDown } from "@tabler/icons-react";
 import classes from "./Header.module.css";
-
-const user = {
-  name: "Jane Spoonfighter",
-  email: "janspoon@fighter.dev",
-  image:
-    "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-};
+import { useNavigate, useLocation } from "react-router-dom";
 
 const tabs = [
-  "Home",
-  "Orders",
-  "Education",
-  "Community",
-  "Forums",
-  "Support",
-  "Account",
-  "Helpdesk",
+  { label: "Home", path: "/" },
+  { label: "Products", path: "/products" },
+  { label: "Orders", path: "/orders" },
 ];
 
 export default function Header() {
-  const { isAuthenticated, logout } = useContext(AuthContext);
-  const theme = useMantineTheme();
-  const [opened, { toggle }] = useDisclosure(false);
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const { user, logout } = useAuth();
 
-  if (!isAuthenticated) {
+  if (!user) {
     return null;
   }
 
-  const items = tabs.map((tab) => (
-    <Tabs.Tab value={tab} key={tab}>
-      {tab}
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [opened, { toggle }] = useDisclosure(false);
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
+
+  const activeTab = tabs.find((tab) => tab.path === location.pathname)?.label;
+
+  const tabItems = tabs.map((tab) => (
+    <Tabs.Tab
+      value={tab.label}
+      key={tab.label}
+      onClick={() => navigate(tab.path)}
+      active={tab.label === activeTab}
+    >
+      {tab.label}
     </Tabs.Tab>
   ));
 
@@ -66,8 +53,6 @@ export default function Header() {
     <div className={classes.header}>
       <Container className={classes.mainSection} size="md">
         <Group position="apart">
-          <MantineLogo size={28} />
-
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
 
           <Menu
@@ -86,13 +71,12 @@ export default function Header() {
               >
                 <Group spacing={7}>
                   <Avatar
-                    src={user.image}
-                    alt={user.name}
+                    src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png"
                     radius="xl"
                     size={20}
                   />
                   <Text fw={500} size="sm" lh={1} mr={3}>
-                    {user.name}
+                    {user.firstname} {user.lastname}
                   </Text>
                   <IconChevronDown
                     style={{ width: rem(12), height: rem(12) }}
@@ -102,40 +86,6 @@ export default function Header() {
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item
-                icon={
-                  <IconHeart
-                    style={{ width: rem(16), height: rem(16) }}
-                    color={theme.colors.red[6]}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Liked posts
-              </Menu.Item>
-              <Menu.Item
-                icon={
-                  <IconStar
-                    style={{ width: rem(16), height: rem(16) }}
-                    color={theme.colors.yellow[6]}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Saved posts
-              </Menu.Item>
-              <Menu.Item
-                icon={
-                  <IconMessage
-                    style={{ width: rem(16), height: rem(16) }}
-                    color={theme.colors.blue[6]}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Your comments
-              </Menu.Item>
-
               <Menu.Label>Settings</Menu.Label>
               <Menu.Item
                 icon={
@@ -144,20 +94,12 @@ export default function Header() {
                     stroke={1.5}
                   />
                 }
+                onClick={() => navigate("/profile")}
               >
                 Account settings
               </Menu.Item>
               <Menu.Item
-                icon={
-                  <IconSwitchHorizontal
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Change account
-              </Menu.Item>
-              <Menu.Item
+                color="red"
                 icon={
                   <IconLogout
                     style={{ width: rem(16), height: rem(16) }}
@@ -168,38 +110,13 @@ export default function Header() {
               >
                 Logout
               </Menu.Item>
-
-              <Menu.Divider />
-
-              <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item
-                icon={
-                  <IconPlayerPause
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Pause subscription
-              </Menu.Item>
-              <Menu.Item
-                color="red"
-                icon={
-                  <IconTrash
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Delete account
-              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </Group>
       </Container>
       <Container size="md">
         <Tabs
-          defaultValue="Home"
+          defaultValue={activeTab || "Home"}
           variant="outline"
           visibleFrom="sm"
           classNames={{
@@ -208,7 +125,7 @@ export default function Header() {
             tab: classes.tab,
           }}
         >
-          <Tabs.List>{items}</Tabs.List>
+          <Tabs.List>{tabItems}</Tabs.List>
         </Tabs>
       </Container>
     </div>
