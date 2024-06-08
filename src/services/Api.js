@@ -12,7 +12,7 @@ export const loginUser = async (credentials) => {
         console.log(response)
         const error = await response.text();
         console.error("Error response:", error);
-        throw new Error("Something went wrong");
+        throw new Error(error);
     }
     return response.json();
 };

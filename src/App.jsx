@@ -4,6 +4,7 @@ import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import AuthProvider, { useAuth } from "./contexts/AuthContext";
 import Authentification from "./pages/auth/Authentification";
+import Home from "./pages/home/Home";
 import Header from "./components/header/Header";
 import ProductList from "./pages/products/ProductList";
 import AddProduct from "./pages/products/AddProduct";
@@ -29,6 +30,14 @@ export default function App() {
       <AuthProvider>
         <Header />
         <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/products"
             element={

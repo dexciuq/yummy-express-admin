@@ -41,7 +41,6 @@ export default function Authentification() {
   const handleSubmit = async (values) => {
     try {
       await login(values.email, values.password);
-      navigate("/");
     } catch (error) {
       if (error instanceof Error) {
         console.error("Login error:", error.message);

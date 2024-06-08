@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Manrope", sans-serif;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content {
+  max-width: 480px;
+  margin-right: calc(var(--mantine-spacing-xl) * 3);
+}
+
+.title {
+  color: #000;
+  font-family: "Manrope", sans-serif;
+  font-size: 44px;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.control {
+  flex: 1;
+}
+
+.image {
+  margin-top: 60px;
+  width: 376px;
+  height: 356px;
+}
+
+@media (max-width: 576px) {
+  .content {
+    max-width: 100%;
+    margin-right: 0;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .image {
+    display: none;
+  }
+}

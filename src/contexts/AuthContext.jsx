@@ -1,12 +1,11 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { loginUser, logoutUser, getUserInfo } from "../services/Api";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(null);
-  const [refreshToken, setRefreshToken] = useState(null);
   const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
@@ -20,25 +19,48 @@ export default function AuthProvider({ children }) {
     }
   };
 
-  useEffect(() => {
-    const savedAccessToken = localStorage.getItem("accessToken");
-    const savedRefreshToken = localStorage.getItem("refreshToken");
-    if (savedAccessToken && savedRefreshToken) {
-      setAccessToken(savedAccessToken);
-      setRefreshToken(savedRefreshToken);
-      fetchUserInfo();
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      return null;
     }
+  };
+
+  const isTokenValid = async (accessToken) => {
+    if (!accessToken) return false;
+
+    const tokenPayload = parseJwt(accessToken);
+    if (!tokenPayload || !tokenPayload.exp) return false;
+
+    const expirationTime = tokenPayload.exp * 1000;
+    const currentTime = Date.now();
+    return expirationTime >= currentTime;
+  };
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const savedAccessToken = localStorage.getItem("accessToken");
+      const isValid = await isTokenValid(savedAccessToken);
+
+      if (isValid) {
+        setAccessToken(savedAccessToken);
+        await fetchUserInfo();
+        navigate("/");
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const login = async (email, password) => {
     try {
       const credentials = { email, password };
       const data = await loginUser(credentials);
-      setAccessToken(data.accessToken);
-      setRefreshToken(data.refreshToken);
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-      fetchUserInfo();
+      const accessToken = data.accessToken;
+      localStorage.setItem("accessToken", accessToken);
+      setAccessToken(accessToken);
+      await fetchUserInfo();
       navigate("/");
     } catch (error) {
       console.error("Login error:", error);
@@ -48,13 +70,9 @@ export default function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await logoutUser();
-      setAccessToken(null);
-      setRefreshToken(null);
       setUser(null);
-
+      setAccessToken(null);
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      navigate("/authentification");
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -64,7 +82,6 @@ export default function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         accessToken,
-        refreshToken,
         user,
         login,
         logout,

@@ -14,7 +14,11 @@ export default function NotFound() {
           The page you are looking for doesn't exist or has been moved.
         </Text>
         <Group className={classes.group} positicenteron="">
-          <Button onClick={() => navigate("/")} className={classes.button}>
+          <Button
+            color="green"
+            onClick={() => navigate("/")}
+            className={classes.button}
+          >
             Go to Home
           </Button>
         </Group>

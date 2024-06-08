@@ -1,8 +1,11 @@
 .header {
   background-color: var(--mantine-color-gray-0, var(--mantine-color-dark-6));
   border-bottom: 1px solid var(--mantine-color-gray-2, transparent);
-  margin-bottom: 120px;
+  margin-bottom: 100px;
   min-width: 100vw;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row-reverse;
 }
 
 .mainSection {
@@ -14,6 +17,7 @@
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
   border-radius: var(--mantine-radius-sm);
   transition: background-color 100ms ease;
+  margin-top: 16px;
 
   &:hover {
     background-color: var(--mantine-color-white, var(--mantine-color-dark-8));

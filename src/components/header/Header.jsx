@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import cx from "clsx";
 import {
@@ -25,11 +25,6 @@ const tabs = [
 
 export default function Header() {
   const { user, logout } = useAuth();
-
-  if (!user) {
-    return null;
-  }
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -43,11 +38,14 @@ export default function Header() {
       value={tab.label}
       key={tab.label}
       onClick={() => navigate(tab.path)}
-      active={tab.label === activeTab}
     >
       {tab.label}
     </Tabs.Tab>
   ));
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className={classes.header}>
@@ -71,7 +69,7 @@ export default function Header() {
               >
                 <Group spacing={7}>
                   <Avatar
-                    src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png"
+                    src="https://www.kindpng.com/picc/m/317-3177437_megamind-png-transparent-png.png"
                     radius="xl"
                     size={20}
                   />

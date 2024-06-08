@@ -3,6 +3,7 @@ import { deleteProduct, getProducts } from "../../services/Api.js";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@mantine/core";
 import ProductCard from "../../components/product-card/ProductCard.jsx";
+import "./ProductList.module.css";
 
 export default function ProductList() {
   const navigate = useNavigate();
