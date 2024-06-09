@@ -45,34 +45,38 @@ export default function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-    useEffect(() => {
-        if (product) {
-            const isActiveDiscount = () => {
-              if(product.discount_percent == 0 || product.discount_id==0){
-                setDiscountActive(false)
-              }else {
-                let startDate = new Date(product.discount_started_at);
-                let endDate = new Date(product.discount_ended_at);
-                let currentDate = new Date();
+  useEffect(() => {
+    if (product) {
+      const isActiveDiscount = () => {
+        if (product.discount_percent == 0 || product.discount_id == 0) {
+          setDiscountActive(false);
+        } else {
+          let startDate = new Date(product.discount_started_at);
+          let endDate = new Date(product.discount_ended_at);
+          let currentDate = new Date();
 
-                // console.log('Start Date:', startDate);
-                // console.log('End Date:', endDate);
-                // console.log('Current Date:', currentDate);
+          // console.log('Start Date:', startDate);
+          // console.log('End Date:', endDate);
+          // console.log('Current Date:', currentDate);
 
-                if (currentDate >= startDate && currentDate <= endDate) {
-                  setDiscountActive(true);
-                } else {
-                  setDiscountActive(false);
-                }
-              }
-            };
-
-            isActiveDiscount();
+          if (currentDate >= startDate && currentDate <= endDate) {
+            setDiscountActive(true);
+          } else {
+            setDiscountActive(false);
+          }
         }
-    }, [product]);
+      };
 
-    if (!product) {
-    return <div className="loadersDiv"><Loader color="#5FCC55" size="xl" /></div>
+      isActiveDiscount();
+    }
+  }, [product]);
+
+  if (!product) {
+    return (
+      <div className="loadersDiv">
+        <Loader color="#5FCC55" size="xl" />
+      </div>
+    );
   }
 
   const handleMenuClick = () => {
@@ -90,16 +94,16 @@ export default function ProductDetail() {
 
   const formatPrice = (price, isDiscountAcive) => {
     let priceWithDiscount = price;
-    if(isDiscountAcive) {
-      priceWithDiscount = (100 - product.discount_percent) * price / 100;
+    if (isDiscountAcive) {
+      priceWithDiscount = ((100 - product.discount_percent) * price) / 100;
     }
     let tenge = Math.floor(price / 100);
     let tiyn = price % 100;
-    let answer = `${tenge}.${tiyn.toString().padStart(2, "0")}`
-    if(isDiscountAcive){
-      tenge = Math.floor(priceWithDiscount / 100)
-      tiyn = priceWithDiscount % 100
-      answer = `(${answer}) ${tenge}.${tiyn.toString().padStart(2, "0")}`
+    let answer = `${tenge}.${tiyn.toString().padStart(2, "0")}`;
+    if (isDiscountAcive) {
+      tenge = Math.floor(priceWithDiscount / 100);
+      tiyn = priceWithDiscount % 100;
+      answer = `(${answer}) ${tenge}.${tiyn.toString().padStart(2, "0")}`;
     }
     answer += "₸";
     return answer;
@@ -122,13 +126,18 @@ export default function ProductDetail() {
               />
             </Grid.Col>
             <Grid.Col span={12} md={6}>
-              <Title ta="center"  order={1} className={classes.title}>
+              <Title ta="center" order={1} className={classes.title}>
                 {product.name}
               </Title>
-              <Text ta="center" size="xl" weight={700} className={classes.price}>
+              <Text
+                ta="center"
+                size="xl"
+                weight={700}
+                className={classes.price}
+              >
                 {formatPrice(product.price, discountActive)}
               </Text>
-              <Title ta="center"  order={2} className={classes.title}>
+              <Title ta="center" order={2} className={classes.title}>
                 <img
                   src={product.category_image}
                   alt={product.category_name}
@@ -167,7 +176,8 @@ export default function ProductDetail() {
                 <Group spacing="xs">
                   <IconDiscount2 size={20} />
                   <Text size="lg">
-                    <strong>Discount:</strong> {product.discount_name} ({discountActive ? "Active" : "Not active" })
+                    <strong>Discount:</strong> {product.discount_name} (
+                    {discountActive ? "Active" : "Not active"})
                   </Text>
                 </Group>
                 <Divider />
@@ -193,7 +203,7 @@ export default function ProductDetail() {
                 </Group>
               </Group>
 
-              <Group>
+              <Group mt={"xl"}>
                 <Button
                   color="blue"
                   onClick={() => {

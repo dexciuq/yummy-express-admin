@@ -1,0 +1,42 @@
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-family: "Manrope";
+  font-weight: bolder;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.button {
+  margin-left: auto;
+  font-size: 14px;
+  padding: 5px 24px;
+}
+
+.infoContainer {
+  display: flex;
+  width: 100%;
+}
+
+.column {
+  flex: 1;
+  min-width: 80px;
+}
+
+.columnImage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}

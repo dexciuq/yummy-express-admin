@@ -1,8 +1,8 @@
 .header {
   background-color: var(--mantine-color-gray-0, var(--mantine-color-dark-6));
   border-bottom: 1px solid var(--mantine-color-gray-2, transparent);
-  margin-bottom: 100px;
   min-width: 100vw;
+  margin-bottom: 50px;
   display: flex;
   align-items: flex-end;
   flex-direction: row-reverse;

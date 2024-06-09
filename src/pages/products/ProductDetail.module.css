@@ -1,7 +1,3 @@
-.container {
-  margin-top: 20px;
-}
-
 .productImage {
   border-radius: 8px;
   object-fit: contain; /* Ensures the image is fully visible */
@@ -28,11 +24,11 @@
   font-size: 1.5rem;
 }
 
-.divLineThrough{
+.divLineThrough {
   text-decoration: line-through;
 }
 
-.myFlexRow{
+.myFlexRow {
   display: flex;
   flex-direction: row;
 }

@@ -20,7 +20,7 @@ export default function ProductCard({ product, onGet, onEdit, onDelete }) {
 
   return (
     <>
-      <div className={`${classes.wrapper} border border-info`}>
+      <div className={`${classes.wrapper} border`}>
         <div className={classes.maininfo}>
           <div className={classes.productimage}>
             <Image
@@ -30,7 +30,6 @@ export default function ProductCard({ product, onGet, onEdit, onDelete }) {
               fit="contain"
             />
           </div>
-          {/*<img src={product.image} className={classes.productimage} alt={product.name} />*/}
           <div className={classes.maininfo2}>
             <div className={classes.nameandcategorywithbutton}>
               <div className={classes.nameandcategory}>
@@ -61,7 +60,7 @@ export default function ProductCard({ product, onGet, onEdit, onDelete }) {
                   <div
                     className="dropdown-item"
                     style={{
-                      cursor: 'default',
+                      cursor: "default",
                     }}
                     onClick={() => onGet(product.id)}
                   >
@@ -70,7 +69,7 @@ export default function ProductCard({ product, onGet, onEdit, onDelete }) {
                   <div
                     className="dropdown-item"
                     style={{
-                      cursor: 'default',
+                      cursor: "default",
                     }}
                     onClick={() => onEdit(product.id)}
                   >
@@ -79,7 +78,7 @@ export default function ProductCard({ product, onGet, onEdit, onDelete }) {
                   <div
                     className="dropdown-item"
                     style={{
-                      cursor: 'default',
+                      cursor: "default",
                     }}
                     onClick={() => handleMenuClick()}
                   >

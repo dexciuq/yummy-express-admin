@@ -49,25 +49,30 @@ export default function ProductList() {
   };
 
   return (
-    <div>
-      <div className="myDiv1">
-      <h1 className="myH1">Product List</h1>
-      <button className="bg-success text-white myButton" onClick={handleAddProduct}>
-        Add Product
-      </button>
-      </div>
-      {loading && <div className="loadersDiv"><Loader color="#5FCC55" size="xl" /></div>}
-      <ul className={classes.myUl}>
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onGet={handleGet}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))}
-      </ul>
+    <div className={classes.container}>
+      <header className={classes.header}>
+        {/* <h1 className={classes.title}>Product List</h1> */}
+        <button className={classes.addButton} onClick={handleAddProduct}>
+          Add Product
+        </button>
+      </header>
+      {loading ? (
+        <div className={classes.loaderContainer}>
+          <Loader color="#5FCC55" size="xl" />
+        </div>
+      ) : (
+        <ul className={classes.productList}>
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onGet={handleGet}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

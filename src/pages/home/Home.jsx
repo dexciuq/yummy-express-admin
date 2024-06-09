@@ -20,9 +20,9 @@ export default function Home() {
         <div className={classes.content}>
           <Title className={classes.title}>Yummy Express</Title>
           <Text c="dimmed" mt="xl">
-            Build fully functional accessible web applications faster than ever
-            – Mantine includes more than 120 customizable components and hooks
-            to cover you in any situation
+            This platform makes it easier for users to browse, select and order
+            products, turning their mobile phones into a one-stop shop to meet
+            all their household needs
           </Text>
 
           <List
@@ -39,20 +39,25 @@ export default function Home() {
             }
           >
             <List.Item mt="xl">
-              <b>TypeScript based</b> – build type safe applications, all
-              components and hooks export types
+              <b>Convenience at Your Fingertips </b> – Order from a wide variety
+              of restaurants and cuisines, and have your favorite meals
+              delivered right to your doorstep with just a few taps on your
+              mobile device.
             </List.Item>
             <List.Item mt="xl">
-              <b>Free and open source</b> – all packages have MIT license, you
-              can use Mantine in any project
+              <b>Fast delivery</b> – Stay updated with order tracking, from the
+              moment you place your order until it arrives at your door,
+              ensuring transparency and timely delivery.
             </List.Item>
             <List.Item mt="xl">
-              <b>No annoying focus ring</b> – focus ring will appear only when
-              user navigates with keyboard
+              <b>Exclusive Deals and Discounts</b> – Enjoy special offers,
+              discounts, and loyalty rewards through food delivery platforms,
+              making your dining experience not only convenient but also
+              economical.
             </List.Item>
           </List>
 
-          <Group mt={30}>
+          <Group mt={50}>
             <Button
               radius="xl"
               color="green"
@@ -67,7 +72,7 @@ export default function Home() {
               size="md"
               className={classes.control}
             >
-              Source code
+              Observe
             </Button>
           </Group>
         </div>

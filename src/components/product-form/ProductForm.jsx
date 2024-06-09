@@ -105,7 +105,7 @@ export default function ProductForm({
   };
 
   return (
-    <div style={{marginBottom: "50px"}} className="container">
+    <div style={{ marginBottom: "50px" }} className="container">
       <h1 className="myH1">{formTitle}</h1>
       <form onSubmit={handleSubmitWithValidation}>
         <div className="form-group">
