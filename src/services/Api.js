@@ -144,22 +144,35 @@ export const addProduct = async (product) => {
     return response.json();
 };
 
-export const updateProduct = async (id, product) => {
+export const updateProduct = (id, product) => {
     product.price = product.price * 100;
-    const response = await fetchWithAccessToken(`${BASE_URL}/products/${id}`, {
+    return fetchWithAccessToken(`${BASE_URL}/products/${id}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(product),
-    });
-    if (!response.ok) {
-        const error = await response.text();
-        console.error("Error response:", error);
-        throw new Error("Something went wrong");
-    }
-    return response.json();
+    })
+        .then(response => {
+            console.log("Updating response", response)
+            console.log("text", response.text)
+            console.log("json", response.json)
+            if (!response.ok) {
+                console.log("Response is not ok")
+                console.log("Not ok response", response)
+                return response.text().then(error => {
+                    console.error("Error response:", error);
+                    throw new Error("Something went wrong");
+                });
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error("Error updating product in apijs", error);
+            throw error;
+        });
 };
+
 
 export const deleteProduct = async (id) => {
     const response = await fetchWithAccessToken(`${BASE_URL}/products/${id}`, {
@@ -172,6 +185,83 @@ export const deleteProduct = async (id) => {
     }
     return response.json();
 };
+
+export const getOrders = async () => {
+    const url = `${BASE_URL}/orders`;
+    const response = await fetch(url);
+    if (!response.ok) {
+        const error = await response.text();
+        console.error("Error response:", error);
+        throw new Error("Something went wrong");
+    }
+    return response.json();
+};
+
+export const getOrder = async (id) => {
+    try {
+        const response = await fetch(`${BASE_URL}/orders/${id}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch order');
+        }
+        return await response.json();
+    } catch (error) {
+        throw new Error('Error fetching order:', error);
+    }
+};
+
+export async function updateOrder(orderId, orderData) {
+    try {
+        const response = await fetch(`${BASE_URL}/orders/${orderId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update order');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export const updateOrderItem = async (itemId, data) => {
+    console.log(itemId, data)
+    console.log(JSON.stringify(data))
+    const response = await fetch(`${BASE_URL}/order-items/${itemId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        const errorMessage = `Failed to update order item with id ${itemId}`;
+        throw new Error(errorMessage);
+    }
+
+    return await response.json();
+};
+
+export async function getStatuses() {
+    try {
+        const response = await fetch(`${BASE_URL}/statuses`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch statuses');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 
 export const getCategories = async () => {
     const response = await fetch(`${BASE_URL}/categories`);

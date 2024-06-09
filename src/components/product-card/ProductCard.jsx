@@ -60,18 +60,27 @@ export default function ProductCard({ product, onGet, onEdit, onDelete }) {
                 >
                   <div
                     className="dropdown-item"
+                    style={{
+                      cursor: 'default',
+                    }}
                     onClick={() => onGet(product.id)}
                   >
                     Get information
                   </div>
                   <div
                     className="dropdown-item"
+                    style={{
+                      cursor: 'default',
+                    }}
                     onClick={() => onEdit(product.id)}
                   >
                     Update
                   </div>
                   <div
                     className="dropdown-item"
+                    style={{
+                      cursor: 'default',
+                    }}
                     onClick={() => handleMenuClick()}
                   >
                     Delete

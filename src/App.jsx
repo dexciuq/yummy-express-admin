@@ -1,6 +1,6 @@
+import "./App.css";
 import "@mantine/core/styles.css";
 import { createTheme, MantineProvider } from "@mantine/core";
-import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import AuthProvider, { useAuth } from "./contexts/AuthContext";
 import Authentification from "./pages/auth/Authentification";
@@ -10,9 +10,11 @@ import ProductList from "./pages/products/ProductList";
 import AddProduct from "./pages/products/AddProduct";
 import UpdateProduct from "./pages/products/UpdateProduct";
 import ProductDetail from "./pages/products/ProductDetail";
+import OrderList from "./pages/OrderList.jsx"
+import OrderDetail from "./pages/OrderDetail";
+import UpdateOrder from "./pages/UpdateOrder";
 import Profile from "./pages/users/Profile";
 import NotFound from "./pages/home/NotFound";
-import "./App.css";
 
 const theme = createTheme({});
 
@@ -70,7 +72,32 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+            <Route
+                path="/orders"
+                element={
+                    <ProtectedRoute>
+                        <OrderList />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/orders/:id"
+                element={
+                    <ProtectedRoute>
+                        <OrderDetail />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/update-order/:id"
+                element={
+                    <ProtectedRoute>
+                        <UpdateOrder />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
             path="/profile"
             element={
               <ProtectedRoute>

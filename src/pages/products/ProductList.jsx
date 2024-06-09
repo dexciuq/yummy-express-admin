@@ -3,7 +3,7 @@ import { deleteProduct, getProducts } from "../../services/Api.js";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@mantine/core";
 import ProductCard from "../../components/product-card/ProductCard.jsx";
-import "./ProductList.module.css";
+import classes from "./ProductList.module.css";
 
 export default function ProductList() {
   const navigate = useNavigate();
@@ -48,17 +48,16 @@ export default function ProductList() {
     }
   };
 
-  if (loading) {
-    return <Loader color="#5FCC55" size="xl" />;
-  }
-
   return (
     <div>
-      <h1>Product List</h1>
-      <button className="bg-success text-white" onClick={handleAddProduct}>
+      <div className="myDiv1">
+      <h1 className="myH1">Product List</h1>
+      <button className="bg-success text-white myButton" onClick={handleAddProduct}>
         Add Product
       </button>
-      <ul style={{ display: "flex", flexWrap: "wrap" }}>
+      </div>
+      {loading && <div className="loadersDiv"><Loader color="#5FCC55" size="xl" /></div>}
+      <ul className={classes.myUl}>
         {products.map((product) => (
           <ProductCard
             key={product.id}

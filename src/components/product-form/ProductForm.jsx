@@ -105,8 +105,8 @@ export default function ProductForm({
   };
 
   return (
-    <div className="container">
-      <h1>{formTitle}</h1>
+    <div style={{marginBottom: "50px"}} className="container">
+      <h1 className="myH1">{formTitle}</h1>
       <form onSubmit={handleSubmitWithValidation}>
         <div className="form-group">
           <label>Name:</label>
@@ -261,7 +261,9 @@ export default function ProductForm({
           <label>Step:</label>
           <input
             type="number"
+            step="0.01"
             name="step"
+            min="0"
             className="form-control"
             value={product.step}
             onChange={handleChange}
@@ -271,7 +273,7 @@ export default function ProductForm({
         </div>
         <button
           type="submit"
-          className="btn btn-primary"
+          className="btn btn-primary myButton"
           style={{
             backgroundColor: "#5FCC55",
             border: "none",

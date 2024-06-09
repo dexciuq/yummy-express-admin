@@ -30,6 +30,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const navigate = useNavigate();
   const [modalOpened, setModalOpened] = useState(false);
+  const [discountActive, setDiscountActive] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -44,8 +45,34 @@ export default function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-  if (!product) {
-    return <Loader size="xl" />;
+    useEffect(() => {
+        if (product) {
+            const isActiveDiscount = () => {
+              if(product.discount_percent == 0 || product.discount_id==0){
+                setDiscountActive(false)
+              }else {
+                let startDate = new Date(product.discount_started_at);
+                let endDate = new Date(product.discount_ended_at);
+                let currentDate = new Date();
+
+                // console.log('Start Date:', startDate);
+                // console.log('End Date:', endDate);
+                // console.log('Current Date:', currentDate);
+
+                if (currentDate >= startDate && currentDate <= endDate) {
+                  setDiscountActive(true);
+                } else {
+                  setDiscountActive(false);
+                }
+              }
+            };
+
+            isActiveDiscount();
+        }
+    }, [product]);
+
+    if (!product) {
+    return <div className="loadersDiv"><Loader color="#5FCC55" size="xl" /></div>
   }
 
   const handleMenuClick = () => {
@@ -61,10 +88,21 @@ export default function ProductDetail() {
     navigate("/products");
   };
 
-  const formatPrice = (price) => {
-    const tenge = Math.floor(price / 100);
-    const tiyn = price % 100;
-    return `${tenge}.${tiyn.toString().padStart(2, "0")}₸`;
+  const formatPrice = (price, isDiscountAcive) => {
+    let priceWithDiscount = price;
+    if(isDiscountAcive) {
+      priceWithDiscount = (100 - product.discount_percent) * price / 100;
+    }
+    let tenge = Math.floor(price / 100);
+    let tiyn = price % 100;
+    let answer = `${tenge}.${tiyn.toString().padStart(2, "0")}`
+    if(isDiscountAcive){
+      tenge = Math.floor(priceWithDiscount / 100)
+      tiyn = priceWithDiscount % 100
+      answer = `(${answer}) ${tenge}.${tiyn.toString().padStart(2, "0")}`
+    }
+    answer += "₸";
+    return answer;
   };
 
   return (
@@ -84,13 +122,13 @@ export default function ProductDetail() {
               />
             </Grid.Col>
             <Grid.Col span={12} md={6}>
-              <Title order={1} className={classes.title}>
+              <Title ta="center"  order={1} className={classes.title}>
                 {product.name}
               </Title>
-              <Text size="xl" weight={700} className={classes.price}>
-                {formatPrice(product.price)}
+              <Text ta="center" size="xl" weight={700} className={classes.price}>
+                {formatPrice(product.price, discountActive)}
               </Text>
-              <Title order={2} className={classes.title}>
+              <Title ta="center"  order={2} className={classes.title}>
                 <img
                   src={product.category_image}
                   alt={product.category_name}
@@ -129,7 +167,7 @@ export default function ProductDetail() {
                 <Group spacing="xs">
                   <IconDiscount2 size={20} />
                   <Text size="lg">
-                    <strong>Discount:</strong> {product.discount_name}
+                    <strong>Discount:</strong> {product.discount_name} ({discountActive ? "Active" : "Not active" })
                   </Text>
                 </Group>
                 <Divider />

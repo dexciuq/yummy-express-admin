@@ -9,6 +9,7 @@ import {
   Title,
   Group,
   Anchor,
+  Alert,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconMail, IconLock } from "@tabler/icons-react";
@@ -43,8 +44,10 @@ export default function Authentification() {
       await login(values.email, values.password);
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Login error:", error.message);
+        console.log("Before message", message)
         setMessage(error.message);
+        console.log("After message", message)
+        console.error("Login error in Authentificationjsx:", error.message);
       } else {
         console.error("Unknown error occurred during login");
       }
@@ -103,7 +106,11 @@ export default function Authentification() {
               Forgot password?
             </Anchor>
           </Group>
-          {message && <div className="error-notification">{message}</div>}
+          {message && (
+              <Alert color="red" title="" mt="md">
+                {message}
+              </Alert>
+          )}
           <Button type="submit" fullWidth mt="xl" className={classes.button}>
             Sign in
           </Button>
