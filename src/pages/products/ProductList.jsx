@@ -51,7 +51,6 @@ export default function ProductList() {
   return (
     <div className={classes.container}>
       <header className={classes.header}>
-        {/* <h1 className={classes.title}>Product List</h1> */}
         <button className={classes.addButton} onClick={handleAddProduct}>
           Add Product
         </button>
